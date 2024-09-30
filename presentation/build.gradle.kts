@@ -1,17 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    //id("kotlin-kapt")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.coffee.presentation"
+    namespace = "com.compose.presentation"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.coffee.presentation"
+        applicationId = "com.compose.presentation"
         minSdk = 31
         targetSdk = 34
         versionCode = 1
@@ -55,7 +54,6 @@ android {
 
 dependencies {
     implementation(project(":data"))
-    //implementation(libs.compose.preview.renderer)
     compileOnly (libs.android.lint.api)
     compileOnly (libs.lint.checks)
     lintChecks(libs.compose.lint.checks)

@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Coffee"
+rootProject.name = "compose"
 include(":presentation")
 include(":domain")
 include(":data")

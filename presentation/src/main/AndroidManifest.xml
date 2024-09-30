@@ -7,11 +7,11 @@
         android:name=".di.App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Coffee">
+        android:theme="@style/Theme.compose">
         <activity
             android:name=".screens.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Coffee">
+            android:theme="@style/Theme.compose">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
