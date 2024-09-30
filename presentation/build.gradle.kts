@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
+    //id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
@@ -63,7 +64,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation (libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation (libs.coil.compose)
     implementation (libs.coil.gif)
     implementation (libs.retrofit)
@@ -89,6 +90,6 @@ dependencies {
 }
 
 // Allow references to generated code
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//   correctErrorTypes = true
+//}

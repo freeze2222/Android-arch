@@ -1,7 +1,7 @@
 package com.coffee.domain.repository
 
-import com.coffee.data.models.OnboardingModel
+import com.coffee.data.models.CatData
 
 interface DomainRepository {
-    suspend fun login(): List<OnboardingModel>
+    suspend fun getRandomCat(): CatData
 }

@@ -15,7 +15,7 @@ object Provider {
     @Singleton
     fun provideRetrofit(): RetrofitApi {
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl("https://api.thecatapi.com/v1/images/")
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(RetrofitApi::class.java)
     }

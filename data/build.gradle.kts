@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
+    //id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
@@ -48,7 +49,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
 
@@ -57,6 +58,6 @@ dependencies {
 }
 
 // Allow references to generated code
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//   correctErrorTypes = true
+//}
