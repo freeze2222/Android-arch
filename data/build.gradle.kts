@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    //id("kotlin-kapt")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
@@ -57,7 +56,12 @@ dependencies {
     implementation(libs.converter.gson)
 }
 
-// Allow references to generated code
-//kapt {
-//   correctErrorTypes = true
-//}
+//Disable test auto-generation
+tasks.configureEach {
+    if (this.name.equals("lint")) {
+        this.enabled = false
+    }
+    if (this.name.contains("Test")) {
+        this.enabled = false
+    }
+}

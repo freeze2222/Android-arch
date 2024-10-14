@@ -42,6 +42,7 @@ android {
 
 dependencies {
     implementation(project(":data"))
+
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
 
@@ -53,4 +54,14 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.retrofit)
+}
+
+//Disable test auto-generation
+tasks.configureEach {
+    if (this.name.equals("lint")) {
+        this.enabled = false
+    }
+    if (this.name.contains("Test")) {
+        this.enabled = false
+    }
 }

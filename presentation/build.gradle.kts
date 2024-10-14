@@ -53,11 +53,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
     compileOnly (libs.android.lint.api)
     compileOnly (libs.lint.checks)
     lintChecks(libs.compose.lint.checks)
 
+    implementation(project(":data"))
     implementation(project(":domain"))
 
     implementation(libs.hilt.android)
@@ -86,8 +86,3 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
-
-// Allow references to generated code
-//kapt {
-//   correctErrorTypes = true
-//}
