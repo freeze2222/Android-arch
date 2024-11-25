@@ -1,6 +1,20 @@
 package com.compose.presentation.screens.catsScreen
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animation
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VectorizedAnimationSpec
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -43,6 +59,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.compose.presentation.R
+import com.compose.presentation.composable.EnterAnimation
 
 @SuppressLint("ComposeMultipleContentEmitters", "ComposeContentEmitterReturningValues")
 @Composable
@@ -60,26 +77,34 @@ fun CatsScreen(
             .padding(contentPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Row { }
         Spacer(modifier = Modifier.height(10.dp))
-        var a by remember {
-            mutableStateOf(100.dp)
+        AnimatedVisibility(
+            visibleState = MutableTransitionState(
+                initialState = false
+            ).apply { targetState = true },
+            enter = slideInHorizontally(initialOffsetX = {state.offset}, animationSpec = tween(durationMillis = 1000)),
+            exit = slideOutHorizontally(),
+        ) {
+            AsyncImage(
+                state.url,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(600.dp)
+                    .clip(
+                        RoundedCornerShape(10.dp)
+                    ),
+                contentScale = ContentScale.Fit,
+                placeholder = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current).data(
+                        R.drawable.cat
+                    ).decoderFactory(ImageDecoderDecoder.Factory()).build()
+                ),
+                onSuccess = {
+                    viewModel.changeOffset(50)
+                }
+            )
         }
-        AsyncImage(
-            state.url,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(a)
-                .clip(
-                    RoundedCornerShape(10.dp)
-                ), contentScale = ContentScale.Fit, placeholder = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current).data(
-                    R.drawable.kitty
-                ).decoderFactory(ImageDecoderDecoder.Factory()).build()
-            ), onLoading = { a = 600.dp }
-        )
         Spacer(modifier = Modifier.weight(2f))
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -94,16 +119,16 @@ fun CatsScreen(
                 modifier = Modifier.height(50.dp)
             )
             Spacer(modifier = Modifier.width(50.dp))
-            Button(
-                modifier = Modifier
-                    .width(140.dp)
-                    .height(50.dp)
-                    .shadow(2.dp),
+            Button(modifier = Modifier
+                .width(140.dp)
+                .height(50.dp)
+                .shadow(2.dp),
                 shape = RoundedCornerShape(10.dp),
                 onClick = {
-                    a = 200.dp
-                viewModel.getRandomCat()
-            }) {
+                    viewModel.getRandomCat().apply {
+                        viewModel.changeOffset(0)
+                    }
+                }) {
                 Text("New image")
             }
             Spacer(modifier = Modifier.width(50.dp))

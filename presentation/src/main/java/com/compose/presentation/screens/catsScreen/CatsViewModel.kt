@@ -26,6 +26,9 @@ class CatsViewModel @Inject constructor(private val useCase: CatUseCase) : ViewM
             _state.emit(newState)
         }
     }
+    fun changeOffset(offset:Int){
+        _state.tryEmit(state.value.copy(offset = offset))
+    }
 
     init {
         getRandomCat()
