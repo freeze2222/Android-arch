@@ -9,28 +9,35 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.jline.utils.Log
 import javax.inject.Inject
 
 @HiltViewModel
 class CatsViewModel @Inject constructor(private val useCase: CatUseCase) : ViewModel() {
-    private val _state = MutableStateFlow(CatsScreenState())
+    private val _state =
+        MutableStateFlow(ArrayList<ImageData>())
 
-    val state: StateFlow<CatsScreenState>
+    val state: StateFlow<List<ImageData>>
         get() = _state.asStateFlow()
 
-    fun getRandomCat() {
+    fun updateList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val newState = CatsScreenState()
-            newState.deserialize(useCase.getRandomCat())
+            val newState = _state.value
+            // newState.removeLast()
+            val element = ImageData()
+            element.deserialize(useCase.getRandomCat())
+            newState.add(element)
             _state.emit(newState)
         }
     }
-    fun changeOffset(offset:Int){
-        _state.tryEmit(state.value.copy(offset = offset))
-    }
-
     init {
-        getRandomCat()
+        viewModelScope.launch(Dispatchers.IO) {
+            while (_state.value.size < 10) {
+                val newState = _state.value
+                val element = ImageData()
+                element.deserialize(useCase.getRandomCat())
+                newState.add(element)
+                _state.emit(newState)
+            }
+        }
     }
 }
