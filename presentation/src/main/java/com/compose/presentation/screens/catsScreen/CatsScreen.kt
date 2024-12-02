@@ -1,7 +1,6 @@
 package com.compose.presentation.screens.catsScreen
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,10 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -25,7 +25,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,10 +57,11 @@ fun CatsScreen(
     modifier: Modifier = Modifier,
     viewModel: CatsViewModel = hiltViewModel<CatsViewModel>(),
 ) {
-    val state = viewModel.state.collectAsState()
-
-    val pagerState = PagerState(0, pageCount = { state.value.size + 1 }) //TODO REMEMBER PAGER STATE
+    val state = viewModel.state.collectAsState().value
+    val pagerState = rememberPagerState { state.data.size }
+    var isFavourited by remember { mutableStateOf(state.data[pagerState.currentPage].isFavourited) }
     val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -73,9 +78,7 @@ fun CatsScreen(
                 .fillMaxWidth()
                 .height(600.dp)
         ) { page ->
-            //Text("TEST $page", color = Color.White, modifier = Modifier.fillMaxSize())
-            val url = if(state.value.isEmpty()) "" else state.value[page].url
-            Log.e("URL", url)
+            val url = state.data[page].url
             AsyncImage(
                 url,
                 contentDescription = null,
@@ -103,9 +106,10 @@ fun CatsScreen(
         ) {
             IconButton(modifier = Modifier.height(50.dp), onClick = {
                 coroutineScope.launch {
-                    //pagerState.animateScrollToPage(
-                    //    if (pagerState.currentPage == 1) pagerState.currentPage
-                    //    else pagerState.currentPage)
+                    isFavourited =
+                        state.data.getOrElse(pagerState.currentPage - 1) { ImageData() }.isFavourited
+                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+
                 }
             }) {
                 Icon(
@@ -124,14 +128,9 @@ fun CatsScreen(
                 onClick = {
                     viewModel.updateList().apply {
                         coroutineScope.launch {
-                            //if (pagerState.currentPage > 5) {
-                            //pagerState.animateScrollToPage(
-                            //    pagerState.currentPage - 1,
-                            //    animationSpec = SpringSpec(stiffness = 0.5f)
-                            //)
-                            //} else {
-                            // pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                            //}
+                            isFavourited =
+                                state.data.getOrElse(pagerState.currentPage + 1) { ImageData() }.isFavourited
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         }
                     }
                 }) {
@@ -139,13 +138,15 @@ fun CatsScreen(
             }
             Spacer(modifier = Modifier.width(50.dp))
             IconButton(modifier = Modifier.height(50.dp), onClick = {
-                Log.e("DEBUG1", state.value.toString())
+                viewModel.addFavourite(pagerState.currentPage)
+                isFavourited = !isFavourited
             }) {
-                Icon(Icons.Default.FavoriteBorder, "", tint = Color.White)
+                Icon(
+                    if (isFavourited) Icons.Default.Favorite
+                    else Icons.Default.FavoriteBorder, "", tint = Color.White
+                )
             }
         }
-        Log.e("page", "current page: ${pagerState.currentPage}")
-        Log.e("state", "current state: $state")
     }
 }
 

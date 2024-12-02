@@ -1,11 +1,13 @@
 package com.compose.data.models
 
-data class RawCatData(
-    val catDataList : List<CatData>
-)
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity
 data class CatData(
-    val url: String = "",
-    val width: Int = 0,
-    val height: Int = 0
+    @PrimaryKey val uid: Int = 0,
+    @ColumnInfo val url: String = "",
+    @ColumnInfo val width: Int = 0,
+    @ColumnInfo val height: Int = 0
 )
