@@ -2,6 +2,7 @@ package com.compose.data.utils
 
 import android.content.Context
 import androidx.room.Room
+import com.compose.data.models.CatDataDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,12 +23,13 @@ object Provider {
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(RetrofitApi::class.java)
     }
-    /*@Provides
+    @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context:Context){
-        Room.databaseBuilder(
+    fun provideDatabase(@ApplicationContext context:Context): CatDataDao {
+        return Room.databaseBuilder(
             context,
             CatDatabase::class.java, "database-name"
-        ).build()
-    }*/
+        ).build().favouriteDao()
+    }
+
 }

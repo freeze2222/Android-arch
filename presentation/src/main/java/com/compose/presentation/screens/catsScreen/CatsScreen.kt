@@ -138,7 +138,7 @@ fun CatsScreen(
             }
             Spacer(modifier = Modifier.width(50.dp))
             IconButton(modifier = Modifier.height(50.dp), onClick = {
-                viewModel.addFavourite(pagerState.currentPage)
+                viewModel.toggleFavourite(pagerState.currentPage)
                 isFavourited = !isFavourited
             }) {
                 Icon(

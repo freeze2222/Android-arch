@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class CatData(
-    @PrimaryKey val uid: Int = 0,
-    @ColumnInfo val url: String = "",
+    //@PrimaryKey val uid: Int = 0,
+    @PrimaryKey val url: String = "",
     @ColumnInfo val width: Int = 0,
     @ColumnInfo val height: Int = 0
 )

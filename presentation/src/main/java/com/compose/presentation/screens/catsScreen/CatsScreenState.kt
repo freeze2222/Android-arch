@@ -15,6 +15,9 @@ data class ImageData(
         this.width = o.width
         this.height = o.height
     }
+    fun toPojo():CatData{
+        return CatData(url = this.url, width = this.width, height = this.height)
+    }
 }
 
 data class CatsScreenState(

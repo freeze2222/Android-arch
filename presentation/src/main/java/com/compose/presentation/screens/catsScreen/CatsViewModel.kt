@@ -2,7 +2,6 @@ package com.compose.presentation.screens.catsScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.compose.domain.usecase.CatUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,11 +25,14 @@ class CatsViewModel @Inject constructor(private val useCase: CatUseCase) : ViewM
         }
     }
 
-    fun addFavourite(index: Int) {
+    fun toggleFavourite(index: Int) {
         viewModelScope.launch(Dispatchers.IO) {
+            val cats = _state.value.data.clone()
+            val isFavourited = !cats[index].isFavourited
+            cats.apply { this[index].isFavourited = isFavourited }
+            useCase.addFavourite(cats[index].toPojo(), isFavourited)
             _state.emit(
-                CatsScreenState(_state.value.data.clone()
-                    .apply { this[index].isFavourited = !this[index].isFavourited })
+                CatsScreenState(cats)
             )
         }
     }

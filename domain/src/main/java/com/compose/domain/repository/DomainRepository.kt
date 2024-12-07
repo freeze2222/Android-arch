@@ -4,7 +4,6 @@ import com.compose.data.models.CatData
 
 interface DomainRepository {
     suspend fun getRandomCat(): CatData
-    suspend fun addFavouriteCat()
-    suspend fun deleteFavouriteCate()
-    suspend fun getFavourites()
+    suspend fun toggleFavouriteCat(data: CatData, isFavourited: Boolean)
+    suspend fun getFavourites(): List<CatData>
 }
